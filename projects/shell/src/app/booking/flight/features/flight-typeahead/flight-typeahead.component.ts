@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription, share, tap, timer } from 'rxjs';
 
 @Component({
-  selector: 'f24-flight-typeahead',
+  selector: 'app-flight-typeahead',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './flight-typeahead.component.html',
