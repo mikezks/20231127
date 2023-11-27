@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'f24-flight-booking',
+  selector: 'app-flight-booking',
   standalone: true,
   imports: [
     RouterOutlet, RouterLink
