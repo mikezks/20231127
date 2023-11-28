@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Observable, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
+import { Observable, Subject, catchError, debounceTime, distinctUntilChanged, filter, of, switchMap, takeUntil, tap, timer } from 'rxjs';
 import { Flight } from '../../logic/model/flight';
 import { FlightService } from './../../logic/data-access/flight.service';
 
@@ -15,12 +15,20 @@ import { FlightService } from './../../logic/data-access/flight.service';
   templateUrl: './flight-typeahead.component.html',
   styleUrl: './flight-typeahead.component.scss'
 })
-export class FlightTypeaheadComponent {
+export class FlightTypeaheadComponent implements OnDestroy {
   private flightService = inject(FlightService);
 
   control = new FormControl('', { nonNullable: true });
   flights$ = this.initFlightsStream();
   loading = false;
+  timer$ = timer(0, 1_000);
+  destroy$ = new Subject<void>();
+
+  constructor() {
+    /* this.timer$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(console.log) */
+  }
 
   initFlightsStream(): Observable<Flight[]> {
     /**
@@ -47,6 +55,12 @@ export class FlightTypeaheadComponent {
   }
 
   load(airport: string): Observable<Flight[]> {
-    return this.flightService.find(airport, '');
+    return this.flightService.find(airport, '').pipe(
+      catchError(() => of([]))
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 }
