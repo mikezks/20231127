@@ -3,10 +3,11 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ticketsActions } from '../../+state/actions';
-import { ticketsFeature } from '../../+state/reducer';
 import { FlightService } from '../../logic/data-access/flight.service';
 import { FlightCardComponent } from '../../ui/flight-card/flight-card.component';
 import { FlightFilterComponent } from '../../ui/flight-filter/flight-filter.component';
+import { injectTicketsFacade } from '../../+state';
+
 
 @Component({
   standalone: true,
@@ -22,10 +23,11 @@ import { FlightFilterComponent } from '../../ui/flight-filter/flight-filter.comp
 export class FlightSearchComponent {
   private flightService = inject(FlightService);
   private store = inject(Store);
+  private ticketsFacade = injectTicketsFacade();
 
   protected from = 'Hamburg';
   protected to = 'Graz';
-  protected flights$ = this.store.select(ticketsFeature.selectFlights);
+  protected flights$ = this.ticketsFacade.flights$;
   protected basket: Record<number, boolean> = {
     3: true,
     5: true,
