@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Flight } from '../model/flight';
 
 
@@ -11,6 +11,8 @@ export class FlightService {
   private http = inject(HttpClient);
 
   flights: Flight[] = [];
+  private flightsCountState = new BehaviorSubject<number>(0);
+  flightsCount$ = this.flightsCountState.asObservable();
   private baseUrl = `https://demo.angulararchitects.io/api`;
 
   load(from: string, to: string, urgent: boolean): void {
@@ -34,7 +36,8 @@ export class FlightService {
     const headers = new HttpHeaders().set('Accept', 'application/json');
 
     return this.http.get<Flight[]>(url, { params, headers }).pipe(
-      tap(flights => this.flights = flights)
+      tap(flights => this.flights = flights),
+      tap(flights => this.flightsCountState.next(flights.length)),
     );
   }
 

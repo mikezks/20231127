@@ -20,7 +20,15 @@
     <li routerLinkActive="active">
       <a routerLink="/booking/flight">
         <i class="nc-icon nc-send"></i>
-        <p>Flights</p>
+        <p>
+          Flights
+          <span
+            *ngIf="flightsCount$ | async as count"
+            class="badge badge-pill badge-info"
+          >
+            {{ count }}
+          </span>
+        </p>
       </a>
     </li>
 

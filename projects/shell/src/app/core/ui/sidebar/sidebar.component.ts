@@ -1,6 +1,7 @@
-import { NgFor } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
+import { FlightService } from '../../../booking/flight/logic/data-access/flight.service';
 
 
 @Component({
@@ -8,9 +9,10 @@ import { RouterLinkActive, RouterLinkWithHref } from '@angular/router';
   standalone: true,
   templateUrl: 'sidebar.component.html',
   imports: [
-    NgFor,
+    NgFor, NgIf, AsyncPipe,
     RouterLinkWithHref, RouterLinkActive
   ]
 })
 export class SidebarComponent {
+  protected flightsCount$ = inject(FlightService).flightsCount$;
 }
