@@ -7,6 +7,7 @@ import { FlightBookingComponent } from "./features/flight-booking/flight-booking
 import { flightsResolverConfig } from "./logic/data-access/flight.resolver";
 import { FlightTypeaheadComponent } from "./features/flight-typeahead/flight-typeahead.component";
 import { ticketsFeature } from "./+state/reducer";
+import { TicketsEffects } from "./+state/effects";
 
 
 export const FLIGHT_ROUTES: Routes = [
@@ -15,7 +16,7 @@ export const FLIGHT_ROUTES: Routes = [
     component: FlightBookingComponent,
     providers: [
       provideState(ticketsFeature),
-      provideEffects()
+      provideEffects([TicketsEffects])
     ],
     children: [
       {

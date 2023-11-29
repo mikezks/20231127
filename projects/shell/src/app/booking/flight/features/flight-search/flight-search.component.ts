@@ -2,12 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { take } from 'rxjs';
+import { injectTicketsFacade } from '../../+state';
 import { ticketsActions } from '../../+state/actions';
-import { FlightService } from '../../logic/data-access/flight.service';
 import { FlightCardComponent } from '../../ui/flight-card/flight-card.component';
 import { FlightFilterComponent } from '../../ui/flight-filter/flight-filter.component';
-import { injectTicketsFacade } from '../../+state';
-import { take } from 'rxjs';
 
 
 @Component({
@@ -22,7 +21,6 @@ import { take } from 'rxjs';
   templateUrl: './flight-search.component.html',
 })
 export class FlightSearchComponent {
-  private flightService = inject(FlightService);
   private store = inject(Store);
   private ticketsFacade = injectTicketsFacade();
 
@@ -39,12 +37,12 @@ export class FlightSearchComponent {
       return;
     }
 
-    this.flightService.find(this.from, this.to).subscribe({
-      next: flights => this.store.dispatch(
-        ticketsActions.flightsLoaded({ flights })
-      ),
-      error: errResp => console.error('Error loading flights', errResp)
-    });
+    this.store.dispatch(
+      ticketsActions.flightsLoad({
+        from: this.from,
+        to: this.to
+      })
+    );
   }
 
   delay(): void {
