@@ -7,6 +7,7 @@ import { FlightService } from '../../logic/data-access/flight.service';
 import { FlightCardComponent } from '../../ui/flight-card/flight-card.component';
 import { FlightFilterComponent } from '../../ui/flight-filter/flight-filter.component';
 import { injectTicketsFacade } from '../../+state';
+import { take } from 'rxjs';
 
 
 @Component({
@@ -43,6 +44,22 @@ export class FlightSearchComponent {
         ticketsActions.flightsLoaded({ flights })
       ),
       error: errResp => console.error('Error loading flights', errResp)
+    });
+  }
+
+  delay(): void {
+    this.flights$.pipe(take(1)).subscribe(flights => {
+      const oldFlight = flights[0];
+      const oldDate = new Date(oldFlight.date);
+
+      const newDate = new Date(oldDate.getTime() + 1000 * 60 * 5); // Add 5 min
+      const newFlight = {
+        ...oldFlight,
+        date: newDate.toISOString(),
+        delayed: true
+      };
+
+      this.store.dispatch(ticketsActions.flightUpdate({ flight: newFlight }));
     });
   }
 }
