@@ -7,12 +7,14 @@ export interface TicketsState {
   flights: Flight[];
   basket: unknown;
   tickets: unknown;
+  hide: number[];
 }
 
 export const initialTicketsState: TicketsState = {
   flights: [],
   basket: {},
-  tickets: {}
+  tickets: {},
+  hide: [3, 5]
 };
 
 
@@ -23,7 +25,7 @@ export const ticketsFeature = createFeature({
 
     on(ticketsActions.flightsLoaded, (state, action) => ({
       ...state,
-      flights: action.flights
+        flights: action.flights
     })),
 
     on(ticketsActions.flightUpdate, (state, action) => {
