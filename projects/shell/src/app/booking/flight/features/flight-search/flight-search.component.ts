@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { take } from 'rxjs';
 import { injectTicketsFacade } from '../../+state';
-import { ticketsActions } from '../../+state/actions';
 import { FlightCardComponent } from '../../ui/flight-card/flight-card.component';
 import { FlightFilterComponent } from '../../ui/flight-filter/flight-filter.component';
 
@@ -21,8 +19,7 @@ import { FlightFilterComponent } from '../../ui/flight-filter/flight-filter.comp
   templateUrl: './flight-search.component.html',
 })
 export class FlightSearchComponent {
-  private store = inject(Store);
-  private ticketsFacade = injectTicketsFacade();
+  protected ticketsFacade = injectTicketsFacade();
 
   protected from = 'Hamburg';
   protected to = 'Graz';
@@ -31,19 +28,6 @@ export class FlightSearchComponent {
     3: true,
     5: true,
   };
-
-  protected search(): void {
-    if (!this.from || !this.to) {
-      return;
-    }
-
-    this.store.dispatch(
-      ticketsActions.flightsLoad({
-        from: this.from,
-        to: this.to
-      })
-    );
-  }
 
   delay(): void {
     this.flights$.pipe(take(1)).subscribe(flights => {
@@ -57,7 +41,7 @@ export class FlightSearchComponent {
         delayed: true
       };
 
-      this.store.dispatch(ticketsActions.flightUpdate({ flight: newFlight }));
+      this.ticketsFacade.updateFlight(newFlight);
     });
   }
 }
