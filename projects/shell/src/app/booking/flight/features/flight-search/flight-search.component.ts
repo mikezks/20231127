@@ -25,7 +25,7 @@ export class FlightSearchComponent {
 
   protected from = 'Hamburg';
   protected to = 'Graz';
-  protected flights$ = this.store.select(ticketsFeature.selectFlights)
+  protected flights$ = this.store.select(ticketsFeature.selectFlights);
   protected basket: Record<number, boolean> = {
     3: true,
     5: true,
