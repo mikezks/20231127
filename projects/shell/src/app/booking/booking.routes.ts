@@ -16,7 +16,11 @@ export const BOOKING_ROUTES: Routes = [
       },
       {
         path: 'passenger',
-        loadChildren: () => import('./passenger')
+        loadChildren: () => import('./passenger'),
+        data: {
+          temp: '2 Grad',
+          preloading: true
+        }
       }
     ]
   }
