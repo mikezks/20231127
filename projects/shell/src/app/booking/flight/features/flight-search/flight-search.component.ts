@@ -3,7 +3,7 @@ import { Component, computed, effect, inject, signal, untracked } from '@angular
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { debounceTime, timer } from 'rxjs';
+import { debounceTime, timer, pipe, tap } from 'rxjs';
 import { ticketsActions } from '../../+state/actions';
 import { ticketsFeature } from '../../+state/reducer';
 import { FlightCardComponent } from '../../ui/flight-card/flight-card.component';
@@ -11,6 +11,7 @@ import { FlightFilterComponent } from '../../ui/flight-filter/flight-filter.comp
 import { patchState, signalState } from '@ngrx/signals';
 import { Flight } from '../../logic/model/flight';
 import { FlightFilter } from '../../logic/model/flight-filter';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 
 @Component({
@@ -41,13 +42,12 @@ export class FlightSearchComponent {
     flights: [] as Flight[]
   });
 
-  private flights = this.store.selectSignal(ticketsFeature.selectFlights);
-
   constructor() {
-    effect(() => {
-      const flights = this.flights();
-      untracked(() => patchState(this.localState, { flights }));
-    });
+    rxMethod<Flight[]>(pipe(
+      tap(flights => patchState(this.localState, { flights }))
+    ))(
+      this.store.select(ticketsFeature.selectFlights)
+    );
   }
 
   protected search(filter: FlightFilter): void {
