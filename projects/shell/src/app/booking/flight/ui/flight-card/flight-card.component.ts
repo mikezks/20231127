@@ -43,7 +43,7 @@ import { injectCdBlink } from '../../../../shared/cd-visualizer/cd-visualizer';
       </div>
     </div>
 
-    {{ blink() }}
+    <!-- {{ blink() }} -->
   `
 })
 export class FlightCardComponent {
