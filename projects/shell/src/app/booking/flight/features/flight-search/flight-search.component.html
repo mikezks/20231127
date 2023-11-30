@@ -4,41 +4,27 @@
   </div>
 
   <div class="card-body">
-    <form>
-      <div class="form-group">
-        <label>From:</label>
-        <input [ngModel]="from()" (ngModelChange)="from.set($event)" name="from" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>To:</label>
-        <input [ngModel]="to()" (ngModelChange)="to.set($event)" name="to" class="form-control" />
-      </div>
-      <div class="form-group">
-        <p>{{ flightRoute() }}</p>
-      </div>
 
-      <div class="form-group">
-        <button (click)="search()" class="btn btn-default">
-          Search
-        </button>
-        <button
-          *ngIf="flights().length > 0"
-          (click)="delay()"
-          class="btn btn-default"
-        >
-          Delay
-        </button>
-      </div>
-    </form>
+    <app-flight-filter
+        [filter]="localState.filter()"
+        (searchTrigger)="search($event)"
+      >
+        <div class="flight-filter-info">
+          @if (localState.flights().length) {
+            {{ localState.flights().length }} flights found!
+          }
+        </div>
+      </app-flight-filter>
+
   </div>
 </div>
 
 <div class="row">
-  @for (flight of flights(); track flight.id) {
+  @for (flight of localState.flights(); track flight.id) {
     <div class="col-xs-12 col-sm-6 col-md-4">
       <app-flight-card
         [item]="flight"
-        [selected]="basket()[flight.id]"
+        [selected]="localState.basket()[flight.id]"
         (selectedChange)="updateBasket(flight.id, $event)"
       />
     </div>
@@ -52,7 +38,7 @@
     </div>
 
     <div class="card-body">
-      <pre>{{ basket() | json }}</pre>
+      <pre>{{ localState.basket() | json }}</pre>
     </div>
   </div>
 } @placeholder {
